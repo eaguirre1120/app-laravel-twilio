@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\TwilioSms;
 use App\UsersPhoneNumber;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
@@ -17,7 +18,8 @@ class HomeController extends Controller
         $userPhoneNumber = new UsersPhoneNumber($request->all());
         $userPhoneNumber->save();
 
-        $this->sendMessage('User registration successful!!', $request->phone_number);
+        // $this->sendMessage('User registration successful!!', $request->phone_number);
+        $userPhoneNumber->notify(new TwilioSms($userPhoneNumber, 'User registration successful from Laravel APP!!'));
 
         return back()->with(['success' => "{$request->phone_number} registered"]);
     }
